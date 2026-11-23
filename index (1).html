@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sabor da Esquina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: alegre, de bairro, apetitoso — a lanchonete da esquina que todo mundo conhece
+   IDEA: o cardápio de balcão com a comanda de papel do pedido
+   PICTURE: um x-tudo montado em camadas com a caixinha de batata ao lado
+   COLOUR and TYPE: creme de papel, vermelho tomate e amarelo mostarda; Lilita One de letreiro + Nunito Sans
+   LAYOUT: nav, cena grande, cardápio por categorias com carrinho, comanda do pedido, horários, rodapé */
+:root{color-scheme:light;--bg:#fff7ea;--paper:#fffdf8;--ink:#2a1a12;--mute:#6e5a4c;--line:#ecd9bd;--red:#e0352b;--mustard:#f5b51b;--green:#3f8f3a}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Nunito Sans",system-ui,sans-serif;overflow-x:clip;padding-bottom:84px}
+a{color:inherit}
+h1,h2,.brand,.price,.big{font-family:"Lilita One",system-ui,sans-serif;font-weight:400;line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:clamp(38px,6vw,60px)}
+h2{font-size:clamp(28px,4vw,42px);margin-bottom:8px}
+.band{padding:clamp(36px,5vw,72px) max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+.lead{color:var(--mute);max-width:60ch;margin:0 0 24px}
+nav{position:sticky;top:0;z-index:5;background:var(--red);color:#fff}
+nav .wrap{display:flex;align-items:center;gap:12px;padding:10px max(5vw,16px);flex-wrap:wrap}
+.brand{font-size:24px;text-decoration:none}
+.links{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.links a{text-decoration:none;padding:10px 12px;border-radius:8px;font-weight:600}
+.links a:hover{background:rgba(255,255,255,.15)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:0;background:var(--red);color:#fff;font:800 16px "Nunito Sans",sans-serif;text-decoration:none;cursor:pointer}
+.btn:hover{filter:brightness(1.07)}
+.btn.y{background:var(--mustard);color:var(--ink)}
+.btn.ghost{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.hero{background:var(--mustard)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.hero p{font-size:18px;max-width:44ch;margin:16px 0 26px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.status{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;padding:6px 14px;border-radius:99px;background:var(--paper);font-size:14px;font-weight:600}
+.status b{width:9px;height:9px;border-radius:50%;background:#999}
+.status.open b{background:var(--green)}
+.scene{width:100%;height:auto;display:block}
+.steam{animation:rise 3s ease-in-out infinite}
+.steam:nth-child(2){animation-delay:1s}.steam:nth-child(3){animation-delay:2s}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}40%{opacity:.7}100%{opacity:0;transform:translateY(-24px)}}
+@media(prefers-reduced-motion:reduce){.steam{animation:none;opacity:.5}html{scroll-behavior:auto}}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px}
+.tab{flex:none;min-height:44px;padding:0 18px;border-radius:999px;border:2px solid var(--line);background:var(--paper);font:700 15px "Nunito Sans",sans-serif;color:var(--ink);cursor:pointer}
+.tab[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.menu{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;align-items:start}
+.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dish{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.dish h3{margin:0;font-size:18px}
+.dish p{margin:0;color:var(--mute);font-size:15px;flex:1}
+.dish .tag{align-self:flex-start;font-size:12px;font-weight:800;background:#ffe9b0;padding:2px 10px;border-radius:99px}
+.dish .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.price{font-size:22px;color:var(--red);white-space:nowrap}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#fff;font:800 20px "Nunito Sans",sans-serif;cursor:pointer;color:var(--ink)}
+.qty button.add{background:var(--red);border-color:var(--red);color:#fff}
+.qty span{min-width:22px;text-align:center;font-weight:800}
+.ticket{position:sticky;top:84px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 10px 30px rgba(90,50,20,.08);
+  -webkit-mask:radial-gradient(circle 8px at 50% 100%,#0000 98%,#000) 50% 100%/22px 100% repeat-x;mask:radial-gradient(circle 8px at 50% 100%,#0000 98%,#000) bottom/22px 100% repeat-x;padding-bottom:34px}
+.ticket h2{font-size:28px}
+.lines{list-style:none;padding:0;margin:12px 0;border-top:2px dashed var(--line)}
+.lines li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.lines li span:last-child{white-space:nowrap;font-weight:700}
+.empty{color:var(--mute);font-size:15px;padding:10px 0}
+.opts{display:grid;gap:12px;margin-top:12px}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.seg button{min-height:44px;border-radius:10px;border:2px solid var(--line);background:#fff;font:700 14px "Nunito Sans",sans-serif;cursor:pointer;color:var(--ink)}
+.seg button[aria-pressed=true]{border-color:var(--red);background:#fde7e4}
+label{display:grid;gap:5px;font-weight:700;font-size:14px}
+input,select,textarea{font:16px "Nunito Sans",sans-serif;min-height:46px;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);width:100%}
+textarea{min-height:70px;resize:vertical}
+.sum{display:grid;gap:4px;margin:14px 0;font-size:15px}
+.sum div{display:flex;justify-content:space-between}
+.sum .grand{font-size:18px;font-weight:800;border-top:2px dashed var(--line);padding-top:8px;margin-top:4px}
+.err{color:var(--red);font-size:14px;font-weight:700;min-height:1em;margin:0 0 8px}
+.bar{position:fixed;left:12px;right:12px;bottom:12px;z-index:6;display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:#fff;border-radius:999px;padding:8px 8px 8px 22px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.bar.show{display:flex}
+.info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{margin:0 0 8px;font-size:19px}
+.card p{margin:0 0 6px;color:var(--mute)}
+.hours{list-style:none;padding:0;margin:0}
+.hours li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.hours li.today{font-weight:800}
+.hours span:last-child{white-space:nowrap}
+.qr{display:flex;gap:16px;align-items:center}
+.qr svg{flex:none;width:96px;height:96px}
+footer{background:var(--ink);color:#e9d9c4;padding:26px max(5vw,16px);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.menu{grid-template-columns:minmax(0,1fr)}.ticket{position:static}}
+@media(max-width:860px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.info{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.items{grid-template-columns:minmax(0,1fr)}.links{order:3;width:100%;margin-left:0;overflow-x:auto;flex-wrap:nowrap}.links a{flex:none}}
+@media(min-width:901px){.bar{display:none!important}body{padding-bottom:0}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="#topo">Sabor da Esquina</a>
+  <div class="links"><a href="#cardapio">Cardápio</a><a href="#pedido">Meu pedido</a><a href="#contato">Horários</a></div>
+</div></nav>
+
+<header class="band hero" id="topo"><div class="wrap">
+  <div>
+    <div class="status" id="status"><b></b><span id="statusTxt">Verificando horário…</span></div>
+    <h1>Lanche caprichado, do chapeiro direto pra sua mesa.</h1>
+    <p>Monte seu pedido pelo cardápio e mande pronto no WhatsApp, sem taxa de aplicativo. Entrega, retirada ou pedido na mesa.</p>
+    <div class="cta"><a class="btn" href="#cardapio">Ver cardápio</a><a class="btn ghost" href="#contato">Horários e endereço</a></div>
+  </div>
+  <svg class="scene" viewBox="0 0 480 400" role="img" aria-label="Hambúrguer x-tudo montado em camadas, com uma caixa de batatas fritas ao lado">
+    <defs>
+      <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2a640"/><stop offset="1" stop-color="#c97418"/></linearGradient>
+      <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a3b1c"/><stop offset="1" stop-color="#4a2210"/></linearGradient>
+      <linearGradient id="box" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c4261e"/><stop offset=".5" stop-color="#e0352b"/><stop offset="1" stop-color="#b0221b"/></linearGradient>
+    </defs>
+    <circle cx="210" cy="210" r="175" fill="#fff7ea" opacity=".55"/>
+    <ellipse cx="230" cy="360" rx="200" ry="18" fill="#2a1a12" opacity=".15"/>
+    <!-- prato -->
+    <ellipse cx="200" cy="340" rx="160" ry="26" fill="#fffdf8"/>
+    <ellipse cx="200" cy="336" rx="130" ry="18" fill="#f2ead9"/>
+    <!-- vapor -->
+    <g fill="none" stroke="#fffdf8" stroke-width="6" stroke-linecap="round">
+      <path class="steam" d="M150 92 q-12 -16 0 -32 q12 -16 0 -32"/>
+      <path class="steam" d="M200 86 q-12 -16 0 -32 q12 -16 0 -32"/>
+      <path class="steam" d="M250 92 q-12 -16 0 -32 q12 -16 0 -32"/>
+    </g>
+    <!-- pão de baixo -->
+    <path d="M78 300 h244 a10 10 0 0 1 10 10 q0 26 -40 26 h-184 q-40 0 -40 -26 a10 10 0 0 1 10 -10Z" fill="url(#bun)"/>
+    <!-- carne 1 -->
+    <rect x="70" y="270" width="260" height="34" rx="17" fill="url(#meat)"/>
+    <path d="M86 278 h228" stroke="#9a5530" stroke-width="3" stroke-dasharray="14 10" opacity=".7"/>
+    <!-- queijo -->
+    <path d="M66 262 h268 l-10 14 l-18 22 l-16 -22 l-40 0 l-14 30 l-16 -30 h-90 l-14 26 l-18 -26 h-24Z" fill="#f5b51b"/>
+    <!-- bacon -->
+    <path d="M74 252 q30 -14 60 0 t60 0 t60 0 t70 0 v10 h-250Z" fill="#b2442a"/>
+    <!-- carne 2 -->
+    <rect x="72" y="218" width="256" height="34" rx="17" fill="url(#meat)"/>
+    <path d="M88 226 h224" stroke="#9a5530" stroke-width="3" stroke-dasharray="14 10" opacity=".7"/>
+    <!-- tomate -->
+    <rect x="86" y="206" width="104" height="16" rx="8" fill="#e0352b"/>
+    <rect x="206" y="206" width="110" height="16" rx="8" fill="#e0352b"/>
+    <!-- alface -->
+    <path d="M60 206 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 q14 -16 28 0 v8 h-280Z" fill="#5aaa3c"/>
+    <!-- pão de cima -->
+    <path d="M70 200 q0 -96 130 -96 q130 0 130 96Z" fill="url(#bun)"/>
+    <path d="M100 160 q30 -44 100 -48" fill="none" stroke="#ffd08a" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+    <g fill="#fff4dc"><ellipse cx="150" cy="140" rx="6" ry="3" transform="rotate(-20 150 140)"/><ellipse cx="190" cy="124" rx="6" ry="3"/><ellipse cx="232" cy="132" rx="6" ry="3" transform="rotate(20 232 132)"/><ellipse cx="268" cy="152" rx="6" ry="3" transform="rotate(30 268 152)"/><ellipse cx="200" cy="160" rx="6" ry="3"/><ellipse cx="160" cy="176" rx="6" ry="3" transform="rotate(-10 160 176)"/><ellipse cx="246" cy="178" rx="6" ry="3" transform="rotate(15 246 178)"/></g>
+    <!-- batata -->
+    <g transform="translate(350 170)">
+      <g fill="#f7c948" stroke="#d99a16" stroke-width="2">
+        <rect x="8" y="10" width="14" height="80" rx="3" transform="rotate(-10 15 50)"/>
+        <rect x="26" y="0" width="14" height="90" rx="3"/>
+        <rect x="44" y="6" width="14" height="84" rx="3" transform="rotate(6 51 48)"/>
+        <rect x="62" y="14" width="14" height="76" rx="3" transform="rotate(14 69 52)"/>
+        <rect x="18" y="20" width="14" height="70" rx="3" transform="rotate(4 25 55)"/>
+        <rect x="52" y="22" width="14" height="70" rx="3" transform="rotate(-6 59 57)"/>
+      </g>
+      <path d="M0 60 h90 l-10 110 h-70Z" fill="url(#box)"/>
+      <path d="M0 60 q45 22 90 0" fill="#b0221b"/>
+      <circle cx="45" cy="120" r="18" fill="#f5b51b"/>
+      <text x="45" y="127" text-anchor="middle" font-family="Lilita One, sans-serif" font-size="20" fill="#e0352b">S</text>
+    </g>
+  </svg>
+</div></header>
+
+<section class="band" id="cardapio"><div class="wrap">
+  <h2>Cardápio</h2>
+  <p class="lead">Toque no + para adicionar. O pedido vai montando na comanda ao lado.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="menu">
+    <div class="items" id="items"></div>
+    <aside class="ticket" id="pedido">
+      <h2>Sua comanda</h2>
+      <ul class="lines" id="lines"></ul>
+      <div class="opts">
+        <div class="seg" id="modo">
+          <button type="button" data-m="entrega" aria-pressed="true">Entrega</button>
+          <button type="button" data-m="retirada" aria-pressed="false">Retirada</button>
+          <button type="button" data-m="mesa" aria-pressed="false">Na mesa</button>
+        </div>
+        <label>Seu nome<input id="nome" autocomplete="given-name" placeholder="Ex.: Ana"></label>
+        <label id="lEnd">Endereço de entrega<input id="end" autocomplete="street-address" placeholder="Rua, número e bairro"></label>
+        <label id="lMesa" hidden>Número da mesa<input id="mesa" inputmode="numeric" placeholder="Ex.: 7"></label>
+        <label>Pagamento<select id="pag"><option>Pix</option><option>Cartão na entrega</option><option>Dinheiro</option></select></label>
+        <label id="lTroco" hidden>Troco para quanto?<input id="troco" inputmode="decimal" placeholder="Ex.: 100"></label>
+        <label>Observações<textarea id="obs" placeholder="Ex.: sem cebola, ponto da carne bem passado"></textarea></label>
+      </div>
+      <div class="sum">
+        <div><span>Subtotal</span><span id="sub">R$ 0,00</span></div>
+        <div id="rowTaxa"><span>Taxa de entrega</span><span id="taxa">R$ 6,00</span></div>
+        <div class="grand"><span>Total</span><span id="tot">R$ 0,00</span></div>
+      </div>
+      <p class="err" id="err"></p>
+      <button class="btn" id="enviar" style="width:100%">Enviar pedido no WhatsApp</button>
+      <a class="btn y" id="wa" href="#" hidden style="width:100%;margin-top:10px">Abrir WhatsApp com o pedido</a>
+    </aside>
+  </div>
+</div></section>
+
+<section class="band" id="contato" style="padding-top:0"><div class="wrap">
+  <h2>Horários e endereço</h2>
+  <p class="lead">Entrega em até 5 km. Pedido mínimo para entrega: R$ 25.</p>
+  <div class="info">
+    <div class="card"><h3>Horários</h3><ul class="hours" id="hours"></ul></div>
+    <div class="card"><h3>Onde estamos</h3><p>Av. Brasil, 1020, Jardim América</p><p>WhatsApp: (11) 98888-8888</p><p>Instagram: @sabordaesquina</p><p><a href="https://www.google.com/maps/search/?api=1&query=Av.+Brasil+1020+Jardim+America">Abrir no Google Maps</a></p></div>
+    <div class="card"><h3>Peça pela mesa</h3><div class="qr"><svg id="qr" viewBox="0 0 21 21" shape-rendering="crispEdges" aria-label="QR code ilustrativo da mesa"></svg><p>Cada mesa tem um QR code que abre este cardápio. Escolha "Na mesa" e o pedido chega direto na cozinha.</p></div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap"><span>© Sabor da Esquina</span><span>Site de demonstração: nome, endereço, contatos e cardápio são exemplos.</span></div></footer>
+
+<div class="bar" id="bar"><span id="barTxt">0 itens · R$ 0,00</span><a class="btn y" href="#pedido">Ver comanda</a></div>
+
+<script>
+{
+const WHATS = '5511988888888';
+const TAXA = 6, MIN = 25;
+const cats = ['Lanches','Porções','Pratos','Bebidas','Sobremesas'];
+const menu = [
+  {c:0,n:'X-Tudo da Esquina',d:'2 carnes 150 g, bacon, ovo, queijo, presunto, alface e tomate',p:32.9,t:'Mais pedido'},
+  {c:0,n:'X-Bacon',d:'Carne 150 g, muito bacon, queijo e maionese da casa',p:26.9},
+  {c:0,n:'X-Salada',d:'Carne 150 g, queijo, alface, tomate e cebola roxa',p:22.9},
+  {c:0,n:'X-Frango',d:'Frango desfiado, catupiry, milho e queijo',p:24.9},
+  {c:0,n:'Smash duplo',d:'2 smash 90 g, cheddar, cebola caramelizada',p:29.9,t:'Novo'},
+  {c:0,n:'Misto quente',d:'Pão de forma, presunto e queijo na chapa',p:12.9},
+  {c:1,n:'Batata frita',d:'Porção 400 g, sequinha e crocante',p:22.0},
+  {c:1,n:'Batata cheddar e bacon',d:'400 g com cheddar cremoso e bacon',p:32.0,t:'Mais pedido'},
+  {c:1,n:'Calabresa acebolada',d:'500 g com pão francês',p:34.0},
+  {c:1,n:'Isca de frango',d:'500 g empanada com molho especial',p:36.0},
+  {c:2,n:'Prato feito',d:'Arroz, feijão, bife acebolado, ovo, salada e fritas',p:27.9},
+  {c:2,n:'Parmegiana de frango',d:'Arroz, fritas e salada (serve 1)',p:34.9},
+  {c:2,n:'Picanha na chapa',d:'250 g, arroz, farofa, vinagrete e fritas',p:54.9},
+  {c:3,n:'Refrigerante lata',d:'350 ml, vários sabores',p:6.0},
+  {c:3,n:'Suco natural',d:'500 ml: laranja, limão, maracujá ou abacaxi',p:9.0},
+  {c:3,n:'Água mineral',d:'500 ml com ou sem gás',p:4.0},
+  {c:3,n:'Milkshake',d:'400 ml: chocolate, morango ou ovomaltine',p:16.0},
+  {c:4,n:'Pudim da casa',d:'Fatia generosa',p:9.0},
+  {c:4,n:'Brownie com sorvete',d:'Brownie quente com bola de creme',p:16.0}
+];
+const horarios = [[0,'Domingo',[17,23]],[1,'Segunda',null],[2,'Terça',[11,23]],[3,'Quarta',[11,23]],[4,'Quinta',[11,23]],[5,'Sexta',[11,24]],[6,'Sábado',[11,24]]];
+const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const $ = id => document.getElementById(id);
+const cart = {};
+let cat = 0, modo = 'entrega';
+
+function renderTabs(){
+  $('tabs').innerHTML = cats.map((c,i) => `<button class="tab" role="tab" aria-selected="${i===cat}" data-i="${i}">${c}</button>`).join('');
+}
+function renderItems(){
+  $('items').innerHTML = menu.map((m,i) => m.c!==cat ? '' : `<div class="dish">${m.t?`<span class="tag">${m.t}</span>`:''}<h3>${m.n}</h3><p>${m.d}</p><div class="foot"><span class="price">${brl(m.p)}</span><div class="qty">${cart[i]?`<button data-i="${i}" data-d="-1" aria-label="Remover um ${m.n}">−</button><span>${cart[i]}</span>`:''}<button class="add" data-i="${i}" data-d="1" aria-label="Adicionar ${m.n}">+</button></div></div></div>`).join('');
+}
+function totals(){
+  const ids = Object.keys(cart);
+  const sub = ids.reduce((s,i) => s + menu[i].p*cart[i], 0);
+  const taxa = modo==='entrega' && ids.length ? TAXA : 0;
+  return {ids, sub, taxa, tot: sub+taxa, qtd: ids.reduce((s,i)=>s+cart[i],0)};
+}
+function renderTicket(){
+  const t = totals();
+  $('lines').innerHTML = t.ids.length ? t.ids.map(i => `<li><span>${cart[i]}× ${menu[i].n}</span><span>${brl(menu[i].p*cart[i])}</span></li>`).join('') : '<li class="empty">Sua comanda está vazia. Escolha algo no cardápio.</li>';
+  $('sub').textContent = brl(t.sub);
+  $('rowTaxa').hidden = modo!=='entrega';
+  $('taxa').textContent = brl(TAXA);
+  $('tot').textContent = brl(t.tot);
+  $('bar').classList.toggle('show', t.qtd>0);
+  $('barTxt').textContent = `${t.qtd} ${t.qtd===1?'item':'itens'} · ${brl(t.tot)}`;
+  $('wa').hidden = true;
+}
+$('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if(!b) return; cat = +b.dataset.i; renderTabs(); renderItems(); });
+$('tabs').addEventListener('keydown', e => {
+  if (e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+  cat = (cat + (e.key==='ArrowRight'?1:-1) + cats.length) % cats.length;
+  renderTabs(); renderItems(); $('tabs').children[cat].focus(); $('tabs').children[cat].scrollIntoView({inline:'nearest',block:'nearest'});
+});
+$('items').addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]'); if(!b) return;
+  const i = b.dataset.i; cart[i] = (cart[i]||0) + (+b.dataset.d);
+  if (cart[i] <= 0) delete cart[i];
+  renderItems(); renderTicket();
+});
+$('modo').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  modo = b.dataset.m;
+  [...$('modo').children].forEach(x => x.setAttribute('aria-pressed', x===b));
+  $('lEnd').hidden = modo!=='entrega';
+  $('lMesa').hidden = modo!=='mesa';
+  renderTicket();
+});
+$('pag').addEventListener('change', () => { $('lTroco').hidden = $('pag').value!=='Dinheiro'; });
+
+$('enviar').addEventListener('click', () => {
+  const t = totals(), err = $('err');
+  const nome = $('nome').value.trim();
+  if (!t.qtd) return err.textContent = 'Adicione pelo menos um item.';
+  if (!nome) { $('nome').focus(); return err.textContent = 'Digite seu nome.'; }
+  if (modo==='entrega' && !$('end').value.trim()) { $('end').focus(); return err.textContent = 'Informe o endereço de entrega.'; }
+  if (modo==='entrega' && t.sub < MIN) return err.textContent = `Pedido mínimo para entrega: ${brl(MIN)}.`;
+  if (modo==='mesa' && !$('mesa').value.trim()) { $('mesa').focus(); return err.textContent = 'Informe o número da mesa.'; }
+  err.textContent = '';
+  const L = [`*Pedido – Sabor da Esquina*`, `Cliente: ${nome}`, ''];
+  t.ids.forEach(i => L.push(`${cart[i]}x ${menu[i].n} – ${brl(menu[i].p*cart[i])}`));
+  L.push('', `Subtotal: ${brl(t.sub)}`);
+  if (t.taxa) L.push(`Entrega: ${brl(t.taxa)}`);
+  L.push(`*Total: ${brl(t.tot)}*`, '');
+  L.push(modo==='entrega' ? `Entregar em: ${$('end').value.trim()}` : modo==='mesa' ? `Mesa: ${$('mesa').value.trim()}` : 'Vou retirar no balcão');
+  L.push(`Pagamento: ${$('pag').value}` + ($('pag').value==='Dinheiro' && $('troco').value ? ` (troco para R$ ${$('troco').value})` : ''));
+  if ($('obs').value.trim()) L.push(`Obs.: ${$('obs').value.trim()}`);
+  const a = $('wa');
+  a.href = `https://wa.me/${WHATS}?text=${encodeURIComponent(L.join('\n'))}`;
+  a.hidden = false; a.focus();
+});
+
+const now = new Date(), today = now.getDay(), hr = now.getHours() + now.getMinutes()/60;
+$('hours').innerHTML = [1,2,3,4,5,6,0].map(i => { const h = horarios[i]; return `<li class="${i===today?'today':''}"><span>${h[1]}${i===today?' (hoje)':''}</span><span>${h[2]?h[2][0]+'h às '+(h[2][1]===24?'0h':h[2][1]+'h'):'Fechado'}</span></li>`; }).join('');
+const ht = horarios[today][2];
+const aberto = ht && hr >= ht[0] && hr < ht[1];
+$('status').classList.toggle('open', !!aberto);
+$('statusTxt').textContent = aberto ? `Aberto agora · pedidos até ${ht[1]===24?'meia-noite':ht[1]+'h'}` : 'Fechado agora · confira os horários';
+
+// QR ilustrativo (padrão fixo, só visual)
+let q = '', seed = 7;
+const rnd = () => (seed = (seed*9301+49297)%233280)/233280;
+const finder = (x,y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#2a1a12"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fffdf8"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#2a1a12"/>`;
+for (let y=0;y<21;y++) for (let x=0;x<21;x++){ if ((x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12)) continue; if (rnd()>.5) q += `<rect x="${x}" y="${y}" width="1" height="1" fill="#2a1a12"/>`; }
+$('qr').innerHTML = `<rect width="21" height="21" fill="#fffdf8"/>` + q + finder(0,0) + finder(14,0) + finder(0,14);
+
+renderTabs(); renderItems(); renderTicket();
+}
+</script>
+</body>
+</html>
